@@ -48,6 +48,7 @@ def select_cities(str1, str2, str3, str4, str5, str6 ):
 def base(str1, str2, str3, str4, str5, str6):
     list_city = [str1, str2, str3, str4, str5, str6]
 
+    list_city = list(set(list_city))
     if 'None' in list_city:
         list_city.remove('None')
 
@@ -103,7 +104,13 @@ def base(str1, str2, str3, str4, str5, str6):
         gdf_close_natus = gpd.read_file("data/route/close_natus").set_crs("EPSG:32629")
         gdf_close_natus = gdf_close_natus.to_crs("EPSG:4326")
     except: pass
+    
+    # add the start marker
+    ff.add_starters_to_map(gdf_best_route, map)
 
+    # add route to the basemap
+    ff.add_route_to_map(gdf_best_route, map)
+    
     # add the nature parks
     try:
         ff.add_nature_to_map(gdf_close_natus, map)
@@ -118,12 +125,6 @@ def base(str1, str2, str3, str4, str5, str6):
     try:
         ff.add_close_heris_to_map(gdf_close_heris, map)
     except: pass
-    
-    # add route to the basemap
-    ff.add_route_to_map(gdf_best_route, map)
-
-    # add the start marker
-    ff.add_starters_to_map(gdf_best_route, map)
 
     # add the layer control for toggling the layers
     map.add_child(folium.LayerControl())
